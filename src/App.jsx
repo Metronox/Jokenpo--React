@@ -3,6 +3,11 @@ import pedra from "./assets/pedra.png";
 import papel from "./assets/papel.png";
 import tesoura from "./assets/tesoura.png";
 
+// Componentes
+import Buttons from "./components/Buttons.jsx";
+import Score from "./components/Score.jsx";
+import Result from "./components/Result.jsx";
+
 const CHOICES = [
 { id: "rock", label: "Pedra", img: pedra },
 { id: "paper", label: "Papel", img: papel },
@@ -55,65 +60,47 @@ export default function App() {
 
   // Possibilidades de resultado
   const outcome = theWinner(playerChoice?.id, cpuChoice?.id);
-  const label = outcome === "win" ? "Você ganhou!"
-              : outcome === "lose" ? "Você perdeu."
-              : outcome === "draw" ? "Empate!"
-              : "Faça sua jogada.";
 
 return (
-    <main style={{ padding: 24, fontFamily: "system-ui" }}>
-      <h1>Jokenpô</h1>
+    <main className="pixel-app">
+      <div className="pixel-card">
+        <h1 className="pixel-title">JOKENPÔ</h1>
 
-      {/* Placar */}
-      <div style={{
-        display: "flex",
-        gap: 16,
-        marginTop: 8,
-        padding: "8px 12px",
-        border: "1px solid #ddd",
-        borderRadius: 8,
-        width: "fit-content"
-      }}>
-        <span>Vitórias: <strong>{score.win}</strong></span>
-        <span>Empates: <strong>{score.draw}</strong></span>
-        <span>Derrotas: <strong>{score.lose}</strong></span>
-      </div>
+        {/* Placar */}
+        <Score win={score.win} draw={score.draw} lose={score.lose} />
 
+        {/* Botões */}
+        <div style={{ display: "flex", gap: 12, marginTop: 16 , justifyContent: "center" }}>
+          {CHOICES.map((c) => (
+            <Buttons
+              key={c.id}
+              img={c.img}
+              label={c.label}
+              onClick={() => handlePlay(c)}
+            />
+          ))}
+        </div>
 
-      {/* Botões */}
-      <div style={{ display: "flex", gap:12, marginTop: 16 }}>
-        {CHOICES.map((c) => (
-          <button key={c.id} onClick={() => handlePlay(c)}
-          style={{ display: "flex", alignItems: "center", gap: 8 }}>
-           <img src={c.img} alt={c.label} width={28} height={28} />
-           {c.label}
-          </button>
-        ))}
-      </div>
+        {/* Resultado */}
+        <Result outcome={outcome} />
 
-      {/* Resultado */}
-      <p style={{ marginTop: 12, fontWeight: 700 }}>{label}</p> 
-      <p style={{ marginTop: 12}}>
-        Sua escolha: <strong>{playerChoice?.label ?? "-"}</strong>
-      </p>
-      <p style={{ marginTop: 4}}>
-        Máquina: <strong>{cpuChoice?.label ?? "-"}</strong>
-      </p>
-      
-      {/* Botão Reiniciar */}
-      <button
-        onClick={handleReset}
-        style={{
-          marginTop: 12,
-          padding: "8px 12px",
-          borderRadius: 999,
-          border: "1px solid #ddd",
-          background: "#f7f7f7",
-          cursor: "pointer",  
-        }}
-      >
-        Reiniciar jogo
-      </button>
+        {/* Escolhas */}
+        <p style={{ marginTop: 12}}>
+          Sua escolha: <strong>{playerChoice?.label ?? "-"}</strong>
+        </p>
+        <p style={{ marginTop: 4}}>
+          Máquina: <strong>{cpuChoice?.label ?? "-"}</strong>
+        </p>
+        
+        {/* Botão Reiniciar */}
+        <button
+          onClick={handleReset}
+          className="pixel-btn"
+          style={{ marginTop: 12 }}
+        >
+          Reiniciar jogo
+        </button>
+      </div>  
     </main>
   );
 }
